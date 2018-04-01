@@ -1,5 +1,133 @@
-library(dplyr)
+# install.packages(("tidyverse"))
 library(tidyverse)
+
+######################################################################
+
+## package
+install.packages("tidyverse")
+library(tidyverse)
+
+## Vectors
+# Add lookup table in the form of a named vector
+two <- c("AA", "AS")
+lut <- c("AA" = "American", 
+         "AS" = "Alaska", 
+         "B6" = "JetBlue")
+two <- lut[two]
+
+lut
+two
+str(two)
+
+## Matrix
+#1
+temp <- matrix(c(3,7,9,6,-1, 6,9,12,13,5), nrow=2, byrow = TRUE)
+
+## List
+#1
+temp <- list(c(1,5,-4,3), c(8,11,-3,9))
+
+#3
+lst <- list(x = c(7, 3), y = c("p", "q"))
+unlist(lst)
+
+# x1  x2  y1  y2 
+# "7" "3" "p" "q"
+
+#2
+list(runif(10), runif(10))
+
+## as.Date()
+
+# .%Y: 4-digit year (1982)
+# .%y: 2-digit year (82)
+# .%m: 2-digit month (01)
+# .%d: 2-digit day of the month (13)
+# .%A: weekday (Wednesday)
+# .%a: abbreviated weekday (Wed)
+# .%B: month (January)
+# .%b: abbreviated month (Jan)
+
+# str1 <- "May 23, '96"
+# date1 <- as.Date(str1, format = "%b %d, '%y")
+
+# as.POSIXct()
+# format()
+
+# .%H: hours as a decimal number (00-23)
+# .%I: hours as a decimal number (01-12)
+# .%M: minutes as a decimal number
+# .%S: seconds as a decimal number
+# .%T: shorthand notation for the typical format %H:%M:%S
+# .%p: AM/PM indicator
+
+# ?strptime
+
+# str1 <- "May 23, '96 hours:23 minutes:01 seconds:45"
+# time1 <- as.POSIXct(str1, format = "%B %d, '%y hours:%H minutes:%M
+
+## dplyr
+
+# tibble
+
+hflights_tbl <- tbl_df(hflights)
+glimpse(hflights_tbl)
+str(hflights)
+hflights_df <- as.data.frame((hflights_tbl))
+hflights_df
+
+# Create tibble
+
+tibble(
+  x = 1:5,
+  y = 1,
+  z = x + y
+)
+
+
+# Create tribble
+
+tribble(
+  ~x, ~y, ~z,
+  #--/--/----
+  "a", 2, 3.6,
+  "b", 1, 8.5
+)
+
+
+## select
+
+# starts_with("X"): every name that starts with "X",
+# ends_with("X"): every name that ends with "X",
+# contains("X"): every name that contains "X",
+# matches("X"): every name that matches "X", where "X" can be a regular expression,
+# num_range("x", 1:5): the variables named x01, x02, x03, x04 and x05,
+# one_of(x): every name that appears in x, which should be a character vector
+
+## summarise
+
+# .min(x) - minimum value of vector x.
+# .max(x) - maximum value of vector x.
+# .mean(x) - mean value of vector x.
+# .median(x) - median value of vector x.
+# .quantile(x, p) - pth quantile of vector x.
+# .sd(x) - standard deviation of vector x.
+# .var(x) - variance of vector x.
+# .IQR(x) - Inter Quartile Range (IQR) of vector x.
+# .diff(range(x)) - total range of vector x.
+
+# first(x) - The first element of vector x.
+# last(x) - The last element of vector x.
+# nth(x, n) - The nth element of vector x.
+# n() - The number of rows in the data.frame or group of observations that summarise() describes.
+# n_distinct(x) - The number of unique values in vector x.
+
+
+
+
+
+
+######################################################################
 
 linkedin <- c(16, 9, 13, 5, 2, 17, 14)
 facebook <- c(17, 7, 5, 16, 8, 13, 14)
@@ -781,3 +909,74 @@ matrix(5:16, nrow=3, byrow=TRUE)
 x<-c(27,15,39)
 x[order(x)]
 order(x)
+
+nums <- list(
+  p = c(4, 8, 12), 
+  q = c(16, 17, 18), 
+  r = c(25, 30, 35)
+)
+nums
+nums[[2]][[1]]
+
+x <- 9:12
+y <- 17:20
+matrix(c(y, x), nrow = 4, byrow = TRUE)
+
+hits <- data.frame(song=c("aaa", "qqq", "ccc"),
+                   length=c(    2.0, 2.47,   2.14))
+hits2 <- data.frame(song2=c("rrr", "ttt", "ggg"),
+                    length=c(    2.0, 2.47,   2.14))
+hits
+hits2
+
+bind_rows(hits,hits2)
+
+x<-c("A","B","C","D")
+str(x)
+summary(x)
+x<-factor(x)
+x
+y<c(1,2,3,2)
+
+?reduce
+
+dfs <- list(
+  age = tibble(name = "John", age = 30),
+  sex = tibble(name = c("John", "Mary"), sex = c("M", "F")),
+  trt = tibble(name = "Mary", treatment = "A")
+)
+dfs
+dfs %>% reduce(semi_join)
+dfs %>% reduce(full_join)
+
+age = tibble(name = "John", age = 30)
+age
+sex = tibble(name = c("John", "Mary"), sex = c("M", "F"))
+sex
+trt = tibble(name = "Mary", treatment = "A")
+trt
+a1<-semi_join(age,sex)
+#a1 <- intersect(age,sex)
+a1
+b1<-semi_join(a1,trt)
+b1
+dfs <- list(age,sex,trt)
+dfs
+reduce(dfs,semi_join)
+reduce(dfs,anti_join)
+
+age1 = tibble(name = "John", age = 30)
+age2 = tibble(name = c("John", "Mary"), age = c(30,44))
+age3 = tibble(name = c("Mithu", "John"), age = c(33,30))
+dfs <- list(age1,age2,age3)
+dfs
+
+str(dfs)
+dfs$age2
+
+
+a1 <- intersect(age1,age2) 
+b1 <- intersect(a1,age3)
+a1
+b1
+reduce(dfs,intersect)
